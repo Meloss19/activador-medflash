@@ -1,14 +1,12 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activación de Software</title>
-    <!-- 1. Librería de Supabase indispensable -->
+    <!-- Librería de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Estilos generales */
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
@@ -19,7 +17,6 @@
             margin: 0;
         }
 
-        /* Tarjeta contenedora */
         .card {
             background: #ffffff;
             padding: 30px;
@@ -42,7 +39,6 @@
             margin-bottom: 24px;
         }
 
-        /* Inputs */
         .input-group {
             text-align: left;
             margin-bottom: 15px;
@@ -64,7 +60,6 @@
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
 
-        /* Botón */
         button {
             width: 100%;
             background-color: #007bff;
@@ -87,44 +82,20 @@
             transform: scale(0.98);
         }
 
-        /* Mensajes de resultado */
         #resultado {
             margin-top: 20px;
             padding: 12px;
             border-radius: 8px;
             font-size: 14px;
-            display: none; /* Oculto por defecto */
+            display: none;
             line-height: 1.4;
             word-break: break-all;
         }
 
-        /* Estados del mensaje */
-        .error {
-            display: block !important;
-            background-color: #fde8e8;
-            color: #c81e1e;
-            border: 1px solid #f8b4b4;
-        }
-
-        .success {
-            display: block !important;
-            background-color: #defadb;
-            color: #1e5e1e;
-            border: 1px solid #bcdea9;
-        }
-
-        .loading {
-            display: block !important;
-            background-color: #e1effe;
-            color: #1e429f;
-            border: 1px solid #a4cafe;
-        }
-
-        /* Clase para resaltar input vacío */
-        .input-error {
-            border-color: #f8b4b4 !important;
-            background-color: #fffafb;
-        }
+        .error { display: block !important; background-color: #fde8e8; color: #c81e1e; border: 1px solid #f8b4b4; }
+        .success { display: block !important; background-color: #defadb; color: #1e5e1e; border: 1px solid #bcdea9; }
+        .loading { display: block !important; background-color: #e1effe; color: #1e429f; border: 1px solid #a4cafe; }
+        .input-error { border-color: #f8b4b4 !important; background-color: #fffafb; }
     </style>
 </head>
 <body>
@@ -147,8 +118,6 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DE SUPABASE ---
-        // Usa la Project URL y la Publishable Key de tus capturas
         const SUPABASE_URL = 'https://kkigelniqntyadfidmdd.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtraWdlbG5pcW50eWFkZmlkbWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODgwOTQsImV4cCI6MjA5MzQ2NDA5NH0.dvZ2c9Y2CvLnV0g6kTqC5dGVpsTYotU9JyhHBZwKG3g'; 
 
@@ -160,7 +129,6 @@
             const resLabel = document.getElementById('resultado');
             const btn = document.getElementById('btnGenerar');
 
-            // 1. Limpiar estados previos
             const ticket = ticketInput.value.trim();
             const deviceId = deviceIdInput.value.trim();
             
@@ -169,23 +137,19 @@
             resLabel.className = "";
             resLabel.innerText = "";
 
-            // 2. Validación de campos vacíos
             if (!ticket || !deviceId) {
                 resLabel.className = "error";
                 resLabel.innerText = "Error: Debes completar ambos campos.";
-                
                 if (!ticket) ticketInput.classList.add('input-error');
                 if (!deviceId) deviceIdInput.classList.add('input-error');
                 return;
             }
 
-            // 3. Proceso de envío
             resLabel.className = "loading";
             resLabel.innerText = "Conectando con el servidor...";
-            btn.disabled = true; // Evitar múltiples clics
+            btn.disabled = true;
 
             try {
-                // Llamamos a la Database Function 'generar_codigo_licencia'
                 const { data, error } = await supabaseClient.rpc('generar_codigo_licencia', {
                     p_ticket: ticket,
                     p_device_id: deviceId
@@ -193,238 +157,21 @@
 
                 if (error) throw error;
 
-                // Si la función SQL devolvió un error personalizado
                 if (data.error) {
                     resLabel.className = "error";
                     resLabel.innerText = data.error;
                 } else {
-                    // Éxito total
                     resLabel.className = "success";
                     resLabel.innerHTML = "<strong>¡Éxito!</strong><br>Tu código es: <br><span style='font-size: 1.4em;'>" + data.activationCode + "</span>";
                 }
             } catch (err) {
                 resLabel.className = "error";
-                resLabel.innerText = "Error: No se pudo procesar la solicitud. Verifica tu conexión.";
-                console.error("Error completo:", err);
+                resLabel.innerText = "Error: No se pudo procesar la solicitud.";
+                console.error(err);
             } finally {
                 btn.disabled = false;
             }
         }
     </script>
 </body>
-=======
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activación de Software</title>
-    <!-- 1. Librería de Supabase indispensable -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        /* Tarjeta contenedora */
-        .card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
-        }
-
-        h2 {
-            color: #1a1a1a;
-            margin-bottom: 8px;
-            font-size: 24px;
-        }
-
-        p.subtitle {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-
-        /* Inputs */
-        .input-group {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 10px;
-            font-size: 16px;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-        }
-
-        /* Botón */
-        button {
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.1s active;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        /* Mensajes de resultado */
-        #resultado {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            display: none; /* Oculto por defecto */
-            line-height: 1.4;
-            word-break: break-all;
-        }
-
-        /* Estados del mensaje */
-        .error {
-            display: block !important;
-            background-color: #fde8e8;
-            color: #c81e1e;
-            border: 1px solid #f8b4b4;
-        }
-
-        .success {
-            display: block !important;
-            background-color: #defadb;
-            color: #1e5e1e;
-            border: 1px solid #bcdea9;
-        }
-
-        .loading {
-            display: block !important;
-            background-color: #e1effe;
-            color: #1e429f;
-            border: 1px solid #a4cafe;
-        }
-
-        /* Clase para resaltar input vacío */
-        .input-error {
-            border-color: #f8b4b4 !important;
-            background-color: #fffafb;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="card">
-        <h2>Activación</h2>
-        <p class="subtitle">Introduce tus datos para generar el código</p>
-        
-        <div class="input-group">
-            <input type="text" id="ticket" placeholder="Número de Ticket">
-        </div>
-        
-        <div class="input-group">
-            <input type="text" id="deviceId" placeholder="ID del Dispositivo">
-        </div>
-
-        <button id="btnGenerar" onclick="generar()">Obtener Código</button>
-        
-        <p id="resultado"></p>
-    </div>
-
-    <script>
-        // --- CONFIGURACIÓN DE SUPABASE ---
-        // Usa la Project URL y la Publishable Key de tus capturas
-        const SUPABASE_URL = 'https://kkigelniqntyadfidmdd.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtraWdlbG5pcW50eWFkZmlkbWRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4ODgwOTQsImV4cCI6MjA5MzQ2NDA5NH0.dvZ2c9Y2CvLnV0g6kTqC5dGVpsTYotU9JyhHBZwKG3g'; 
-
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function generar() {
-            const ticketInput = document.getElementById('ticket');
-            const deviceIdInput = document.getElementById('deviceId');
-            const resLabel = document.getElementById('resultado');
-            const btn = document.getElementById('btnGenerar');
-
-            // 1. Limpiar estados previos
-            const ticket = ticketInput.value.trim();
-            const deviceId = deviceIdInput.value.trim();
-            
-            ticketInput.classList.remove('input-error');
-            deviceIdInput.classList.remove('input-error');
-            resLabel.className = "";
-            resLabel.innerText = "";
-
-            // 2. Validación de campos vacíos
-            if (!ticket || !deviceId) {
-                resLabel.className = "error";
-                resLabel.innerText = "Error: Debes completar ambos campos.";
-                
-                if (!ticket) ticketInput.classList.add('input-error');
-                if (!deviceId) deviceIdInput.classList.add('input-error');
-                return;
-            }
-
-            // 3. Proceso de envío
-            resLabel.className = "loading";
-            resLabel.innerText = "Conectando con el servidor...";
-            btn.disabled = true; // Evitar múltiples clics
-
-            try {
-                // Llamamos a la Database Function 'generar_codigo_licencia'
-                const { data, error } = await supabaseClient.rpc('generar_codigo_licencia', {
-                    p_ticket: ticket,
-                    p_device_id: deviceId
-                });
-
-                if (error) throw error;
-
-                // Si la función SQL devolvió un error personalizado
-                if (data.error) {
-                    resLabel.className = "error";
-                    resLabel.innerText = data.error;
-                } else {
-                    // Éxito total
-                    resLabel.className = "success";
-                    resLabel.innerHTML = "<strong>¡Éxito!</strong><br>Tu código es: <br><span style='font-size: 1.4em;'>" + data.activationCode + "</span>";
-                }
-            } catch (err) {
-                resLabel.className = "error";
-                resLabel.innerText = "Error: No se pudo procesar la solicitud. Verifica tu conexión.";
-                console.error("Error completo:", err);
-            } finally {
-                btn.disabled = false;
-            }
-        }
-    </script>
-</body>
->>>>>>> 9d2b8da51202e4fcf41991a2993649f795d6f433
 </html>
