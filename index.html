@@ -44,6 +44,15 @@
             margin-bottom: 15px;
         }
 
+        /* Estilo para la etiqueta pequeña de opcional */
+        .label-optional {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+            display: block;
+            margin-left: 5px;
+        }
+
         input[type="text"] {
             width: 100%;
             padding: 12px 15px;
@@ -107,6 +116,12 @@
         <div class="input-group">
             <input type="text" id="ticket" placeholder="Ticket de compra">
         </div>
+
+        <!-- NUEVO CAMPO DE NOMBRE -->
+        <div class="input-group">
+            <span class="label-optional">Nombre o Alias (Opcional - Útil para soporte)</span>
+            <input type="text" id="nombreCliente" placeholder="Ej: Juan Pérez">
+        </div>
         
         <div class="input-group">
             <input type="text" id="deviceId" placeholder="ID del Dispositivo">
@@ -126,11 +141,14 @@
         async function generar() {
             const ticketInput = document.getElementById('ticket');
             const deviceIdInput = document.getElementById('deviceId');
+            const nombreInput = document.getElementById('nombreCliente'); // Referencia al nuevo campo
             const resLabel = document.getElementById('resultado');
             const btn = document.getElementById('btnGenerar');
 
             const ticket = ticketInput.value.trim();
             const deviceId = deviceIdInput.value.trim();
+            // Si está vacío, enviamos "Anónimo"
+            const nombre = nombreInput.value.trim() || "Anónimo"; 
             
             ticketInput.classList.remove('input-error');
             deviceIdInput.classList.remove('input-error');
@@ -139,20 +157,22 @@
 
             if (!ticket || !deviceId) {
                 resLabel.className = "error";
-                resLabel.innerText = "Error: Debes completar ambos campos.";
+                resLabel.innerText = "Error: Debes completar Ticket e ID de dispositivo.";
                 if (!ticket) ticketInput.classList.add('input-error');
                 if (!deviceId) deviceIdInput.classList.add('input-error');
                 return;
             }
 
             resLabel.className = "loading";
-            resLabel.innerText = "Conectando con el servidor...";
+            resLabel.innerText = "Procesando activación...";
             btn.disabled = true;
 
             try {
+                // He añadido 'p_nombre' como tercer parámetro para tu función RPC
                 const { data, error } = await supabaseClient.rpc('generar_codigo_licencia', {
                     p_ticket: ticket,
-                    p_device_id: deviceId
+                    p_device_id: deviceId,
+                    p_nombre: nombre
                 });
 
                 if (error) throw error;
@@ -162,11 +182,11 @@
                     resLabel.innerText = data.error;
                 } else {
                     resLabel.className = "success";
-                    resLabel.innerHTML = "<strong>¡Éxito!</strong><br>Tu código es: <br><span style='font-size: 1.4em;'>" + data.activationCode + "</span>";
+                    resLabel.innerHTML = "<strong>¡Éxito!</strong><br>Copia este código en el programa:<br><span style='font-size: 1.4em; display:block; margin-top:10px; font-family:monospace;'>" + data.activationCode + "</span>";
                 }
             } catch (err) {
                 resLabel.className = "error";
-                resLabel.innerText = "Error: No se pudo procesar la solicitud.";
+                resLabel.innerText = "Error: No se pudo conectar con el servidor.";
                 console.error(err);
             } finally {
                 btn.disabled = false;
